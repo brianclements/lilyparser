@@ -1,5 +1,7 @@
+#!/usr/bin/python
 # -*-coding: utf8 -*-
 import sys, os
+from LilyParser import LilyParser as lp
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
@@ -13,4 +15,4 @@ if __name__ == "__main__":
         print "Invalid Argument! : No such file."
 
     lilydoc = file_to_parse.read()
-    print lilydoc # temp
+    lilyparser = lp(lilydoc)
