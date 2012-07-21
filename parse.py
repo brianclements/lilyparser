@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # -*-coding: utf8 -*-
 import sys, os
-from LilyParser import LilyParser as lp
+from LilyParser.Parser import Parser as lp
+
+DEBUG = True
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
@@ -16,3 +18,6 @@ if __name__ == "__main__":
 
     lilydoc = file_to_parse.read()
     lilyparser = lp(lilydoc)
+
+    if DEBUG:
+        lilyparser._print_tokens()
