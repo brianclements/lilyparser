@@ -4,8 +4,7 @@
 # custom modules
 from Data import LyData as Data, LyTokenWaitingQueue as WaitingQ
 from Functions import RefineStringMargin, TokenizeString
-
-DEBUG = True
+from Debug import DEBUG
 
 class LyUnit(object):
     spaces = [" ", "\n", "\t"]
@@ -16,7 +15,7 @@ class LyUnit(object):
     def _tokenize(self):
         self._raw_tokens = TokenizeString(self.string)
 
-        if DEBUG:
+        if DEBUG():
             print "RAW TOKENS..."
             self._print_raw_tokens()
 
@@ -34,8 +33,11 @@ class LyUnit(object):
     def _refine_raw_tokens(self):
         self.tokens = []
 
-        _waiting_queue = WaitingQ([])
+        _waiting_queue = WaitingQ()
         for rtoken in self._raw_tokens:
+            if rtoken in self.spaces:
+                continue
+
             if _waiting_queue.IsWaitingSomething():
                 if _waiting_queue.IsWaiting(rtoken):
                     _include_rtoken = _waiting_queue.IncludeTokensWaited()
@@ -47,24 +49,25 @@ class LyUnit(object):
                     if _include_rtoken or _exclude_rtoken:
                         continue
                 else:
-                    _waiting_queue.Append(rtoken)
+                    if rtoken == "\n" or rtoken == "\t":
+                        _waiting_queue.Append(" ")
+                    else:
+                        _waiting_queue.Append(rtoken)
 
             if not _waiting_queue.IsWaitingSomething():
-                if rtoken in self.spaces:
-                    pass
-                elif rtoken == "\\":
-                    _waiting_queue.WillWait(['"', '#', '{'])
-                    _waiting_queue.Append("/")
-                elif rtoken == '"':
-                    _waiting_queue.WillWaitAndInclude(['"'])
-                    _waiting_queue.Append('"')
-                elif rtoken == "{":
-                    _waiting_queue.WillWaitAndInclude(['}'])
-                    _waiting_queue.Append('{')
+                if rtoken == "{":
+                    _waiting_queue.WillWaitAndInclude(['}'], check_nested=['{'])
+                    _waiting_queue.Append(rtoken)
+                elif rtoken == "(":
+                    _waiting_queue.WillWaitAndInclude([')'], check_nested=['('])
+                    _waiting_queue.Append(rtoken)
+                elif rtoken == "<<":
+                    _waiting_queue.WillWaitAndInclude(['>>'])
+                    _waiting_queue.Append(rtoken)
                 else:
                     self.tokens.append(rtoken)
 
-        if DEBUG:
+        if DEBUG():
             print "REFINED TOKENS..."
             self._print_tokens()
 
@@ -74,7 +77,7 @@ class LyUnit(object):
 
 class Root(LyUnit):
     def __init__(self, string):
-        if DEBUG:
+        if DEBUG():
             print "__init__ of Root"
         super(Root, self).__init__(string)
 
