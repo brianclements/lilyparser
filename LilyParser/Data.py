@@ -12,6 +12,8 @@ class LyData(dict):
     def __init__(self, name):
         super(LyData, self).__init__()
         self.name = name
+        self.attributes = list()
+        self.variables = dict()
 
     def SetName(self, name):
         self.name = name

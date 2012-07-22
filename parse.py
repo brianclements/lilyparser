@@ -17,3 +17,8 @@ if __name__ == "__main__":
     lilydoc = file_to_parse.read()
 
     lily = LyParser(lilydoc).Parse()
+
+    # header
+    print "=== HEADER ==="
+    for key, value in lily['header'].variables.iteritems():
+        print key + " : " + value
