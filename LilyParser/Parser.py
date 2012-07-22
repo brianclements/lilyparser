@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 
 # custom modules
-from Units import Root
+from Classes import Root
 
 class Parser:
     def __init__(self, _str):

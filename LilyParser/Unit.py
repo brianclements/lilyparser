@@ -2,8 +2,8 @@
 # -*- coding: utf8 -*-
 
 # custom modules
-from Data import LyData as Data, LyTokenWaitingQueue as WaitingQ
-from Functions import RefineStringMargin, TokenizeString
+from Data import LyTokenWaitingQueue as WaitingQ
+from Functions import TokenizeString
 from Debug import DEBUG
 
 class LyUnit(object):
@@ -75,25 +75,4 @@ class LyUnit(object):
         for token in self.tokens:
             print token
 
-class Root(LyUnit):
-    def __init__(self, string):
-        if DEBUG():
-            print "__init__ of Root"
-        super(Root, self).__init__(string)
 
-    def Parse(self):
-        self._tokenize()
-        self.data = Data('Root')
-
-        for token in self.tokens:
-            pass # todo
-
-        return self.data
-
-class String(LyUnit):
-    def __init__(self, string):
-        super(String, self).__init__(string)
-
-    def Parse(self):
-        self.data = RefineStringMargin(self.data, ['"', "'", " "])
-        return self.data
