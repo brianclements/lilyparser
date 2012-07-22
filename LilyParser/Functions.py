@@ -28,15 +28,27 @@ def TokenizeString(string):
     # prevent "string" from being tokenized
     string_list = []
     string_index = 0
+    find_from = 0
     while True:
-        m = re.search(r'(\".+\")', _string)
-        if m:
-            matched_str = m.group(0)
-            if DEBUG():
-                print "Tokenized String " + str(string_index) + " : " + matched_str
-            _string = _string.replace(matched_str, "%%STRING_" + str(string_index) + "%%", 1)
-            string_list.append(matched_str)
-            string_index += 1
+        if _string.find('"', find_from) >= 0:
+            quote_start = _string.find('"', find_from)
+            find_from = quote_start + 1
+            while True:
+                if _string.find('"', find_from) >= 0:
+                    quote_end = _string.find('"', find_from)
+                    if _string[quote_end-1] == "/" and _string[quote_end-2] != "/":
+                        find_from = quote_end + 1
+                    else:
+                        _quote = _string[quote_start:quote_end+1]
+                        string_list.append(_quote)
+                        _string = _string.replace(_quote, "%%STRING_"+str(string_index)+"%%", 1)
+                        if DEBUG():
+                            print "STRING "+str(string_index)+" : "+_quote
+                        string_index += 1
+                        find_from = quote_end + 1
+                        break
+                else:
+                    break
         else:
             break
 
