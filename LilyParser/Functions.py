@@ -66,3 +66,9 @@ def TokenizeString(string):
             _list[_list.index(el)] = string_list[string_index]
             string_index += 1
     return _list 
+
+def IsGroup(string):
+    return string.startswith("{") and string.endswith("}")
+
+def IsString(string):
+    return string.startswith('"') and string.endswith('"')
