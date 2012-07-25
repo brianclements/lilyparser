@@ -14,6 +14,7 @@ class LyData(dict):
         self.name = name
         self.attributes = list()
         self.variables = dict()
+        self.notes = list()
 
     def SetName(self, name):
         self.name = name
